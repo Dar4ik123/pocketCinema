@@ -8,6 +8,8 @@
 import UIKit
 
 class MainScreenViewController: UIViewController {
+    
+    private let viewModel = MainScreenViewModel(cells: [])
 
     override func viewDidLoad() {
         super.viewDidLoad()
