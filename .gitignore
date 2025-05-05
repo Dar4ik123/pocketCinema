@@ -1,0 +1,8 @@
+Pods/  
+
+!Podfile  
+!Podfile.lock  
+
+/.cocoapods/  
+
+.DS_Store

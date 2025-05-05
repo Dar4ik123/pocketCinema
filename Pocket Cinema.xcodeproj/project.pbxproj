@@ -6,8 +6,15 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		2D4D4F54A4C6D0EBAA0E2157 /* libPods-Pocket Cinema.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C5BD547DC6169C044EAE26B5 /* libPods-Pocket Cinema.a */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		1CF124AC2DC24967008EC0F7 /* Pocket Cinema.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pocket Cinema.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3742D963CAD710219A62F88C /* Pods-Pocket Cinema.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pocket Cinema.debug.xcconfig"; path = "Target Support Files/Pods-Pocket Cinema/Pods-Pocket Cinema.debug.xcconfig"; sourceTree = "<group>"; };
+		C5BD547DC6169C044EAE26B5 /* libPods-Pocket Cinema.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Pocket Cinema.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB144804E12FCC29E5E4E03C /* Pods-Pocket Cinema.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pocket Cinema.release.xcconfig"; path = "Target Support Files/Pods-Pocket Cinema/Pods-Pocket Cinema.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -36,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D4D4F54A4C6D0EBAA0E2157 /* libPods-Pocket Cinema.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -47,6 +55,8 @@
 			children = (
 				1CF124AE2DC24967008EC0F7 /* Pocket Cinema */,
 				1CF124AD2DC24967008EC0F7 /* Products */,
+				28792C394C3DC583AC3D701D /* Pods */,
+				995EE9707BB8BF08E07948D9 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,6 +68,23 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		28792C394C3DC583AC3D701D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3742D963CAD710219A62F88C /* Pods-Pocket Cinema.debug.xcconfig */,
+				CB144804E12FCC29E5E4E03C /* Pods-Pocket Cinema.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		995EE9707BB8BF08E07948D9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C5BD547DC6169C044EAE26B5 /* libPods-Pocket Cinema.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -65,9 +92,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1CF124BF2DC24968008EC0F7 /* Build configuration list for PBXNativeTarget "Pocket Cinema" */;
 			buildPhases = (
+				EF618883F0B262D155E0F18B /* [CP] Check Pods Manifest.lock */,
 				1CF124A82DC24967008EC0F7 /* Sources */,
 				1CF124A92DC24967008EC0F7 /* Frameworks */,
 				1CF124AA2DC24967008EC0F7 /* Resources */,
+				CFA15518717335F13D440BEF /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -77,8 +106,6 @@
 				1CF124AE2DC24967008EC0F7 /* Pocket Cinema */,
 			);
 			name = "Pocket Cinema";
-			packageProductDependencies = (
-			);
 			productName = "Pocket Cinema";
 			productReference = 1CF124AC2DC24967008EC0F7 /* Pocket Cinema.app */;
 			productType = "com.apple.product-type.application";
@@ -127,6 +154,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		CFA15518717335F13D440BEF /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Pocket Cinema/Pods-Pocket Cinema-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Pocket Cinema/Pods-Pocket Cinema-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Pocket Cinema/Pods-Pocket Cinema-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EF618883F0B262D155E0F18B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Pocket Cinema-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		1CF124A82DC24967008EC0F7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -140,12 +209,14 @@
 /* Begin XCBuildConfiguration section */
 		1CF124C02DC24968008EC0F7 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3742D963CAD710219A62F88C /* Pods-Pocket Cinema.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VULK6BKXJ2;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Pocket Cinema/SupportingFiles/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -167,12 +238,14 @@
 		};
 		1CF124C12DC24968008EC0F7 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CB144804E12FCC29E5E4E03C /* Pods-Pocket Cinema.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VULK6BKXJ2;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Pocket Cinema/SupportingFiles/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
