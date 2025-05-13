@@ -17,6 +17,7 @@ class MainScreenViewController: UIViewController {
         super.viewDidLoad()
         viewModel = viewModel.getMockData(count: 10)
         setupFlowLayout()
+        fetchMovie()
     }
     
     private func setupFlowLayout() {
@@ -36,6 +37,7 @@ class MainScreenViewController: UIViewController {
         view.addSubview(collectionView)
         collectionView.snp.makeConstraints {
             $0.edges.equalToSuperview()
+           
         }
     }
 }
@@ -54,4 +56,18 @@ extension MainScreenViewController: UICollectionViewDelegate, UICollectionViewDa
         cell.configure(with: viewModel.cells[indexPath.row])
         return cell
     }
-}
+        }
+ 
+  private func fetchMovie() {
+        let target: ApiTarget = .films
+        NetworkManager.shared.fetch(target) { result in
+            switch result {
+            case .success(let counties):
+                print(counties)
+            case .failure(let error):
+                print(error)
+            }
+            
+        }
+    }
+
