@@ -13,13 +13,16 @@ protocol ApiTargetType {
 }
 
 enum ApiTarget: ApiTargetType {
-    case films
+    case films(page: Int)
     
-    var baseUrl: String { "https://www.omdbapi.com/" }
+    var baseUrl: String {
+        "https://www.omdbapi.com/"
+    }
+    
     var path: String {
         switch self {
-        case .films:
-            return "?s=movie&type=movie&page=1&apikey=a08d04c5"
+        case .films(let page):
+            return "?s=movie&type=movie&page=\(page)&apikey=a08d04c5"
         }
     }
 }

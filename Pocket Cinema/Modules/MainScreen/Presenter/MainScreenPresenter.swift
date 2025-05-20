@@ -18,12 +18,28 @@ final class MainScreenPresenter {
 
 //MARK: - MVPPresenterProtocol
 extension MainScreenPresenter: MainScreenPresenterProtocol {
+
     func viewDidLoad() {
-        fetchMovie()
+        fetchMovie(page: model.page)
     }
     
-    private func fetchMovie() {
-        let target: ApiTarget = .films
+    func didChangePage(isNext: Bool) {
+        
+        if isNext {
+            model.page += 1
+        } else {
+            model.page -= 1
+        }
+        fetchMovie(page: model.page)
+        
+    }
+    
+}
+
+extension MainScreenPresenter {
+    
+    private func fetchMovie(page: Int) {
+        let target: ApiTarget = .films(page: page)
         networkManager.fetch(target) { [weak self] result in
             guard let self else { return }
             switch result {
@@ -38,7 +54,7 @@ extension MainScreenPresenter: MainScreenPresenterProtocol {
             }
         }
     }
-
+    
     func makeViewModel() -> MainScreenViewModel {
         var cells: [MainScreenViewModel.MainScreenCellConfiguration] = []
         model.movieResponse?.search.forEach {
@@ -47,4 +63,5 @@ extension MainScreenPresenter: MainScreenPresenterProtocol {
         }
         return MainScreenViewModel(cells: cells)
     }
+   
 }
