@@ -13,6 +13,7 @@ protocol MainScreenComposterProtocol: AnyObject {
 
 protocol MainScreenPresenterProtocol: AnyObject {
     func viewDidLoad()
+    func didChangePage(isNext: Bool)
 }
 
 protocol MainScreenViewControllerProtocol: AnyObject {

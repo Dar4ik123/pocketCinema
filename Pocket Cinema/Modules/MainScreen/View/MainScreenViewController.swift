@@ -13,6 +13,8 @@ class MainScreenViewController: UIViewController {
     private let presenter: MainScreenPresenterProtocol
     private var viewModel = MainScreenViewModel(cells: [])
     private var collectionView: UICollectionView!
+    private let buttonBack = UIButton()
+    private let buttonNext = UIButton()
     
     init(presenter: MainScreenPresenterProtocol) {
         self.presenter = presenter
@@ -27,7 +29,6 @@ class MainScreenViewController: UIViewController {
         super.viewDidLoad()
         setupFlowLayout()
         presenter.viewDidLoad()
-        
     }
     
     private func setupFlowLayout() {
@@ -44,10 +45,31 @@ class MainScreenViewController: UIViewController {
         collectionView.register(MainScreenCollectionViewCell.self, forCellWithReuseIdentifier: MainScreenCollectionViewCell.reuseID)
         collectionView.backgroundColor = .white
         
+        buttonBack.setTitle("Back", for: .normal)
+        buttonBack.backgroundColor = .systemBlue
+        buttonBack.layer.cornerRadius = 8
+        
+        buttonNext.setTitle("Next", for: .normal)
+        buttonNext.backgroundColor = .systemBlue
+        buttonNext.layer.cornerRadius = 8
+        
+        let buttonStackView = UIStackView(arrangedSubviews: [buttonBack, buttonNext])
+        buttonStackView.axis = .horizontal
+        buttonStackView.spacing = 16
+        buttonStackView.distribution = .fillEqually
         view.addSubview(collectionView)
+        view.addSubview(buttonStackView)
+        
+        buttonBack.addTarget(self, action: #selector(didTapBack), for: .touchUpInside)
+        buttonNext.addTarget(self, action: #selector(didTapNext), for: .touchUpInside)
+        
         collectionView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-            
+            $0.top.horizontalEdges.equalToSuperview()
+        }
+        
+        buttonStackView.snp.makeConstraints {
+            $0.top.equalTo(collectionView.snp.bottom).inset(16)
+            $0.horizontalEdges.bottom.equalToSuperview().inset(16)
         }
     }
 }
@@ -74,4 +96,14 @@ extension MainScreenViewController: UICollectionViewDelegate, UICollectionViewDa
         cell.configure(with: viewModel.cells[indexPath.row])
         return cell
     }
+    
+    @objc private func didTapBack() {
+        presenter.didChangePage(isNext: false)
+    }
+
+    @objc private func didTapNext() {
+        presenter.didChangePage(isNext: true)
+    }
+    
 }
+

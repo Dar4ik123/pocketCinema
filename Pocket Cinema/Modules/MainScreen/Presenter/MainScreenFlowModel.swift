@@ -9,4 +9,5 @@ import Foundation
 
 struct MainScreenFlowModel {
     var movieResponse: MovieResponse?
+    var page: Int = 1
 }
