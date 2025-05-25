@@ -11,13 +11,16 @@ import SnapKit
 class MainScreenViewController: UIViewController {
     
     private let presenter: MainScreenPresenterProtocol
-    private var viewModel = MainScreenViewModel(cells: [])
+    private var viewModel = MainScreenViewModel(cells: [], state: .loading)
+    
     private var collectionView: UICollectionView!
+    private let activityIndicator = UIActivityIndicatorView(style: .large)
     private let buttonBack = UIButton()
     private let buttonNext = UIButton()
-    
-    init(presenter: MainScreenPresenterProtocol) {
+    private let networkManager: NetworkManager
+    init(presenter: MainScreenPresenterProtocol, networkManager: NetworkManager) {
         self.presenter = presenter
+        self.networkManager = networkManager
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -29,6 +32,12 @@ class MainScreenViewController: UIViewController {
         super.viewDidLoad()
         setupFlowLayout()
         presenter.viewDidLoad()
+        setupActivityIndicator()
+        showNoInternetAlert()
+        
+        
+        
+       
     }
     
     private func setupFlowLayout() {
@@ -48,10 +57,15 @@ class MainScreenViewController: UIViewController {
         buttonBack.setTitle("Back", for: .normal)
         buttonBack.backgroundColor = .systemBlue
         buttonBack.layer.cornerRadius = 8
+        buttonBack.setTitleColor(.white, for: .normal)
+        buttonBack.setTitleColor(.gray, for: .disabled)
+        buttonBack.isEnabled = false
         
         buttonNext.setTitle("Next", for: .normal)
         buttonNext.backgroundColor = .systemBlue
         buttonNext.layer.cornerRadius = 8
+        
+        
         
         let buttonStackView = UIStackView(arrangedSubviews: [buttonBack, buttonNext])
         buttonStackView.axis = .horizontal
@@ -59,7 +73,7 @@ class MainScreenViewController: UIViewController {
         buttonStackView.distribution = .fillEqually
         view.addSubview(collectionView)
         view.addSubview(buttonStackView)
-        
+                
         buttonBack.addTarget(self, action: #selector(didTapBack), for: .touchUpInside)
         buttonNext.addTarget(self, action: #selector(didTapNext), for: .touchUpInside)
         
@@ -77,8 +91,43 @@ class MainScreenViewController: UIViewController {
 extension MainScreenViewController: MainScreenViewControllerProtocol {
     func configure(viewModel: MainScreenViewModel) {
         self.viewModel = viewModel
-        print(viewModel)
         collectionView.reloadData()
+        
+        switch viewModel.state {
+        case .data:
+            activityIndicator.stopAnimating()
+            collectionView.isHidden = false
+            hideErrorView()
+            buttonBack.isEnabled = true
+            buttonNext.isEnabled = true
+        case .loading:
+            activityIndicator.startAnimating()
+            collectionView.isHidden = false
+            hideErrorView()
+            buttonBack.isEnabled = false
+            buttonNext.isEnabled = false
+        case .error:
+            activityIndicator.stopAnimating()
+            collectionView.isHidden = true
+            showErrorView(on: view)
+            buttonBack.isEnabled = false
+            buttonNext.isEnabled = true
+        }
+    }
+    
+    private func hideErrorView() {
+        view.subviews.forEach {
+            if $0.accessibilityIdentifier == "errorContainer" {
+                $0.removeFromSuperview()
+            }
+        }
+        }
+    private func showNoInternetAlert() {
+        let alert = UIAlertController(title: "Error",
+                                      message: "No internet connection",
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
 }
 
@@ -93,8 +142,8 @@ extension MainScreenViewController: UICollectionViewDelegate, UICollectionViewDa
             for: indexPath
         ) as? MainScreenCollectionViewCell else { return UICollectionViewCell() }
         
-        cell.configure(with: viewModel.cells[indexPath.row])
-        return cell
+        cell.configure(with: viewModel.cells[indexPath.row], networkManager: networkManager)
+            return cell
     }
     
     @objc private func didTapBack() {
@@ -104,6 +153,14 @@ extension MainScreenViewController: UICollectionViewDelegate, UICollectionViewDa
     @objc private func didTapNext() {
         presenter.didChangePage(isNext: true)
     }
-    
+    private func setupActivityIndicator() {
+        activityIndicator.color = .gray
+        activityIndicator.hidesWhenStopped = true
+        view.addSubview(activityIndicator)
+        
+        activityIndicator.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+    }
 }
 

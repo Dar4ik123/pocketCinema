@@ -24,33 +24,33 @@ extension MainScreenPresenter: MainScreenPresenterProtocol {
     }
     
     func didChangePage(isNext: Bool) {
-        
         if isNext {
             model.page += 1
         } else {
             model.page -= 1
         }
         fetchMovie(page: model.page)
-        
     }
-    
 }
 
 extension MainScreenPresenter {
     
     private func fetchMovie(page: Int) {
+        model.state = .loading
+        updateView() 
+        
         let target: ApiTarget = .films(page: page)
         networkManager.fetch(target) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(let movies):
-                model.movieResponse = movies
-                let viewModel = makeViewModel()
-                DispatchQueue.main.async {
-                    self.view?.configure(viewModel: viewModel)
+            DispatchQueue.main.async {
+                guard let self else { return }
+                switch result {
+                case .success(let movies):
+                    self.model.movieResponse = movies
+                    self.model.state = .data
+                case .failure:
+                    self.model.state = .error
                 }
-            case .failure(let error):
-                print(error)
+                self.updateView()
             }
         }
     }
@@ -58,10 +58,15 @@ extension MainScreenPresenter {
     func makeViewModel() -> MainScreenViewModel {
         var cells: [MainScreenViewModel.MainScreenCellConfiguration] = []
         model.movieResponse?.search.forEach {
-            let image = networkManager.loadImage(url: $0.poster)
-            cells.append(.init(title: $0.title, year: $0.year, poster: image))
+            cells.append(.init(title: $0.title, year: $0.year, poster: $0.poster))
         }
-        return MainScreenViewModel(cells: cells)
+        return MainScreenViewModel(cells: cells, state: model.state)
     }
    
+    func updateView() {
+        DispatchQueue.main.async { [weak self] in
+            guard let viewModel = self?.makeViewModel() else { return }
+            self?.view?.configure(viewModel: viewModel)
+        }
+    }
 }

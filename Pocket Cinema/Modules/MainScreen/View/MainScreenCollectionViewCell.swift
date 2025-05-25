@@ -31,51 +31,57 @@ final class MainScreenCollectionViewCell: UICollectionViewCell {
         yearLabel.text = nil
     }
     
-    func configure(with configuration: MainScreenViewModel.MainScreenCellConfiguration) {
+    func configure(with configuration: MainScreenViewModel.MainScreenCellConfiguration, networkManager: NetworkManager) {
         titleLabel.text = configuration.title
         yearLabel.text = configuration.year
-        imageView.image = configuration.poster
-    }
-    
-    private func setupCell() {
-        contentView.backgroundColor = .lightGray.withAlphaComponent(0.3)
-        contentView.layer.cornerRadius = 8
-        contentView.clipsToBounds = true
-        addSubview(imageView)
-        addSubview(titleLabel)
-        addSubview(yearLabel)
-        
-        // Настройка imageView
-        imageView.contentMode = .scaleAspectFill
-        imageView.layer.cornerRadius = 8
-        imageView.clipsToBounds = true
-        
-        // Настройка titleLabel
-        titleLabel.textAlignment = .center
-        titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        titleLabel.numberOfLines = 2
-        
-        // Настройка yearLabel
-        yearLabel.textAlignment = .center
-        yearLabel.font = .systemFont(ofSize: 12)
-        yearLabel.textColor = .secondaryLabel
-        
-        // Установка констрейнтов
-        imageView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.leading.trailing.equalToSuperview()
-            make.height.equalTo(contentView.bounds.height * 0.75)
-        }
-        
-        titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(imageView.snp.bottom).inset(8)
-            make.leading.trailing.equalToSuperview().inset(8)
-        }
-        
-        yearLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).inset(8)
-            make.leading.trailing.equalToSuperview()
-            make.bottom.equalToSuperview()
+        imageView.image = nil
+
+        networkManager.loadImage(url: configuration.poster) { [weak self] image in
+            DispatchQueue.main.async {
+                self?.imageView.image = image ?? UIImage(named: "placeholder")
+            }
         }
     }
-}
+        private func setupCell() {
+            contentView.backgroundColor = .lightGray.withAlphaComponent(0.3)
+            contentView.layer.cornerRadius = 8
+            contentView.clipsToBounds = true
+            addSubview(imageView)
+            addSubview(titleLabel)
+            addSubview(yearLabel)
+            
+            // Настройка imageView
+            imageView.contentMode = .scaleAspectFill
+            imageView.layer.cornerRadius = 8
+            imageView.clipsToBounds = true
+            
+            // Настройка titleLabel
+            titleLabel.textAlignment = .center
+            titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+            titleLabel.numberOfLines = 2
+            
+            // Настройка yearLabel
+            yearLabel.textAlignment = .center
+            yearLabel.font = .systemFont(ofSize: 12)
+            yearLabel.textColor = .secondaryLabel
+            
+            // Установка констрейнтов
+            imageView.snp.makeConstraints { make in
+                make.top.equalToSuperview()
+                make.leading.trailing.equalToSuperview()
+                make.height.equalTo(contentView.bounds.height * 0.75)
+            }
+            
+            titleLabel.snp.makeConstraints { make in
+                make.top.equalTo(imageView.snp.bottom).inset(8)
+                make.leading.trailing.equalToSuperview().inset(8)
+            }
+            
+            yearLabel.snp.makeConstraints { make in
+                make.top.equalTo(titleLabel.snp.bottom).inset(8)
+                make.leading.trailing.equalToSuperview()
+                make.bottom.equalToSuperview()
+            }
+        }
+    }
+

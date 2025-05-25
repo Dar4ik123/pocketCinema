@@ -9,26 +9,21 @@ import UIKit
 
 struct MainScreenViewModel {
     var cells: [MainScreenCellConfiguration]
+    let state: State
 }
 
 extension MainScreenViewModel {
     struct MainScreenCellConfiguration {
         let title: String
         let year: String
-        let poster: UIImage?
+        let poster: String
     }
 }
 
 extension MainScreenViewModel {
-    func getMockData(count: Int) -> MainScreenViewModel {
-        var cells: [MainScreenCellConfiguration] = []
-        for count in 0..<count {
-            cells.append(MainScreenCellConfiguration(
-                title: "Title \(count)",
-                year: "200\(count)",
-                poster: UIImage(named: "testImage")
-            ))
-        }
-        return MainScreenViewModel(cells: cells)
+    enum State {
+        case data
+        case loading
+        case error
     }
 }
