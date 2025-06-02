@@ -17,10 +17,31 @@ class MainScreenViewController: UIViewController {
     private let activityIndicator = UIActivityIndicatorView(style: .large)
     private let buttonBack = UIButton()
     private let buttonNext = UIButton()
-    private let networkManager: NetworkManager
-    init(presenter: MainScreenPresenterProtocol, networkManager: NetworkManager) {
+    
+    private let errorView: UIView = {
+            let view = UIView()
+            view.backgroundColor = .white
+            view.accessibilityIdentifier = "errorContainer"
+            
+            let label = UILabel()
+            label.text = "Произошла ошибка."
+            label.textColor = .black
+            label.textAlignment = .center
+            label.numberOfLines = 0
+            
+            view.addSubview(label)
+            label.snp.makeConstraints {
+                $0.center.equalToSuperview()
+                $0.horizontalEdges.equalToSuperview().inset(16)
+            }
+
+            view.isHidden = true
+            return view
+        }()
+    
+    
+    init(presenter: MainScreenPresenterProtocol) {
         self.presenter = presenter
-        self.networkManager = networkManager
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -33,11 +54,12 @@ class MainScreenViewController: UIViewController {
         setupFlowLayout()
         presenter.viewDidLoad()
         setupActivityIndicator()
-        showNoInternetAlert()
         
         
-        
-       
+        view.addSubview(errorView)
+        errorView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
     }
     
     private func setupFlowLayout() {
@@ -116,20 +138,11 @@ extension MainScreenViewController: MainScreenViewControllerProtocol {
     }
     
     private func hideErrorView() {
-        view.subviews.forEach {
-            if $0.accessibilityIdentifier == "errorContainer" {
-                $0.removeFromSuperview()
-            }
+        errorView.isHidden = true
+
         }
-        }
-    private func showNoInternetAlert() {
-        let alert = UIAlertController(title: "Error",
-                                      message: "No internet connection",
-                                      preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alert, animated: true)
-    }
 }
+
 
 extension MainScreenViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -142,14 +155,19 @@ extension MainScreenViewController: UICollectionViewDelegate, UICollectionViewDa
             for: indexPath
         ) as? MainScreenCollectionViewCell else { return UICollectionViewCell() }
         
-        cell.configure(with: viewModel.cells[indexPath.row], networkManager: networkManager)
-            return cell
+        let config = viewModel.cells[indexPath.row]
+        
+        if presenter is MainScreenPresenter {
+            cell.configure(with: config, networkManager: presenter.getNetworkManager())
+           
+        }
+        return cell
     }
     
     @objc private func didTapBack() {
         presenter.didChangePage(isNext: false)
     }
-
+    
     @objc private func didTapNext() {
         presenter.didChangePage(isNext: true)
     }
@@ -161,6 +179,8 @@ extension MainScreenViewController: UICollectionViewDelegate, UICollectionViewDa
         activityIndicator.snp.makeConstraints {
             $0.center.equalToSuperview()
         }
+       
+        
     }
+    
 }
-

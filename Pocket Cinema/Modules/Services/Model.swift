@@ -22,7 +22,7 @@ struct MovieResponse: Codable {
 struct Movie: Codable {
     let title, year, imdbID: String
     let type: TypeEnum
-    let poster: String
+    let poster: String?
 
     enum CodingKeys: String, CodingKey {
         case title = "Title"
