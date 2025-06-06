@@ -5,7 +5,7 @@
 //  Created by Айдар on 30.04.2025.
 //
 
-import UIKit
+import Foundation
 
 struct MainScreenViewModel {
     var cells: [MainScreenCellConfiguration]
@@ -16,7 +16,7 @@ extension MainScreenViewModel {
     struct MainScreenCellConfiguration {
         let title: String
         let year: String
-        let poster: String
+        let poster: String?
     }
 }
 

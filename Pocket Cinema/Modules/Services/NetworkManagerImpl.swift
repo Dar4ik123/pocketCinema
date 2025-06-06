@@ -22,7 +22,6 @@ final class NetworkManagerImpl: NetworkManager {
             completion(nil)
             return
         }
-        
         URLSession.shared.dataTask(with: imageUrl) { data, _, error in
             guard let data = data, error == nil, let image = UIImage(data: data) else {
                 completion(nil)
@@ -34,7 +33,7 @@ final class NetworkManagerImpl: NetworkManager {
         }.resume()
     }
     
-    private func request<T: Codable>(_ target: ApiTarget, completion: @escaping(Result<T, NetworkError>) -> Void) {
+    private func request<T: Decodable>(_ target: ApiTarget, completion: @escaping(Result<T, NetworkError>) -> Void) {
         guard let url = URL(string: target.baseUrl + target.path) else {
             completion(.failure(.invalidURL))
             return

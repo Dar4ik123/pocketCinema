@@ -1,5 +1,4 @@
 import Foundation
-import UIKit
 
 final class MainScreenPresenter {
     
@@ -19,11 +18,6 @@ final class MainScreenPresenter {
 
 //MARK: - MVPPresenterProtocol
 extension MainScreenPresenter: MainScreenPresenterProtocol {
-    func getNetworkManager() -> any NetworkManager {
-        return networkManager
-    }
-    
-    
     func viewDidLoad() {
         fetchMovie(page: model.page)
     }
@@ -31,7 +25,6 @@ extension MainScreenPresenter: MainScreenPresenterProtocol {
     func didChangePage(isNext: Bool) {
         if isNext {
             model.page += 1
-            
         } else {
             model.page = max(1, model.page - 1)
         }
@@ -64,9 +57,7 @@ extension MainScreenPresenter {
     func makeViewModel() -> MainScreenViewModel {
         var cells: [MainScreenViewModel.MainScreenCellConfiguration] = []
         model.movieResponse?.search.forEach {
-            let poster = $0.poster ?? ""
-            cells.append(.init(title: $0.title, year: $0.year, poster: poster))
-            
+            cells.append(.init(title: $0.title, year: $0.year, poster: $0.poster))
         }
         return MainScreenViewModel(cells: cells, state: model.state)
     }
@@ -77,7 +68,6 @@ extension MainScreenPresenter {
             self?.view?.configure(viewModel: viewModel)
         }
     }
-    
 }
 
 

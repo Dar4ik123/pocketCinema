@@ -33,18 +33,11 @@ final class MainScreenCollectionViewCell: UICollectionViewCell {
         yearLabel.text = nil
     }
     
-    func configure(with configuration: MainScreenViewModel.MainScreenCellConfiguration, networkManager: NetworkManager) {
+    func configure(configuration: MainScreenViewModel.MainScreenCellConfiguration) {
         titleLabel.text = configuration.title
         yearLabel.text = configuration.year
-        imageView.image = nil
-        
-        if let url = URL(string: configuration.poster) {
-            networkManager.loadImage(url: url.absoluteString) { [weak self] image in
-                DispatchQueue.main.async {
-                    self?.imageView.image = image
-                }
-            }
-        }
+        guard let posterURL = URL(string: configuration.poster ?? "") else { return }
+        imageView.loadImage(from: posterURL)
     }
     private func setupCell() {
         contentView.backgroundColor = .lightGray.withAlphaComponent(0.3)

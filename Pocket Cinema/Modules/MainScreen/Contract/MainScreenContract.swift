@@ -14,7 +14,6 @@ protocol MainScreenComposterProtocol: AnyObject {
 protocol MainScreenPresenterProtocol: AnyObject {
     func viewDidLoad()
     func didChangePage(isNext: Bool)
-    func getNetworkManager () -> NetworkManager
 }
 
 protocol MainScreenViewControllerProtocol: AnyObject {

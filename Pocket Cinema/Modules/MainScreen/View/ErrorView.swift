@@ -1,67 +1,66 @@
 import UIKit
 
-let myView: UIView = {
-    let view = UIView()
-    return view
-}()
-
-func showErrorView(on oneErrorView: UIView) {
+final class ErrorView: UIView {
+    private let errorImage = UIImageView()
+    private let errorLabel = UILabel()
+    private let refreshButton = UIButton()
+    var didTapRefreshButton: (() -> Void)?
     
-    oneErrorView.subviews.forEach {
-            if $0.accessibilityIdentifier == "errorContainer" {
-                $0.removeFromSuperview()
-            }
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+private extension ErrorView {
+    func setupView() {
+        backgroundColor = .white
+        
+        errorImage.image = UIImage(systemName: "wifi")
+        errorImage.contentMode = .scaleAspectFit
+        errorImage.tintColor = .systemGray
+        
+        errorLabel.text = "Нет соединения с интернетом"
+        errorLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        errorLabel.textColor = .darkGray
+        errorLabel.textAlignment = .center
+        
+        refreshButton.setTitle("Обновить", for: .normal)
+        refreshButton.backgroundColor = .systemGray4
+        refreshButton.layer.cornerRadius = 9
+        refreshButton.layer.borderWidth = 1
+        refreshButton.layer.borderColor = UIColor.systemGray6.cgColor
+        refreshButton.setTitleColor(.systemBlue, for: .normal)
+        refreshButton.addTarget(self, action: #selector(refreshButtonDidTap), for: .touchUpInside)
+        
+        let stackView = UIStackView(arrangedSubviews: [errorImage, errorLabel, refreshButton])
+        stackView.axis = .vertical
+        stackView.spacing = 25
+        stackView.alignment = .center
+        
+        addSubview(stackView)
+        stackView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.equalToSuperview().inset(40)
         }
-    
-    let errorContainer = UIView()
-    errorContainer.accessibilityIdentifier = "errorContainer"
-    errorContainer.translatesAutoresizingMaskIntoConstraints = false
-    oneErrorView.addSubview(errorContainer)
-    
-    let errorImageView = UIImageView()
-    errorImageView.backgroundColor = .black
-    errorImageView.image = UIImage(systemName: "wifi")
-    errorImageView.contentMode = .scaleAspectFit
-    errorImageView.translatesAutoresizingMaskIntoConstraints = false
-    
-    let errorLabel = UILabel()
-    errorLabel.textColor = .white
-    errorLabel.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-    errorLabel.textAlignment = .center
-    errorLabel.text = "Ошибка"
-    errorLabel.translatesAutoresizingMaskIntoConstraints = false
-    
-    errorContainer.addSubview(errorImageView)
-    errorContainer.addSubview(errorLabel)
-    
-    NSLayoutConstraint.activate([
         
-        errorContainer.centerXAnchor.constraint(equalTo: oneErrorView.centerXAnchor),
-        errorContainer.centerYAnchor.constraint(equalTo: oneErrorView.centerYAnchor),
-        errorContainer.widthAnchor.constraint(equalTo: oneErrorView.widthAnchor, multiplier: 0.8),
+        errorImage.snp.makeConstraints { make in
+            make.width.height.equalTo(100)
+        }
         
+        refreshButton.snp.makeConstraints { make in
+            make.width.equalTo(200)
+            make.height.equalTo(50)
+        }
         
-        errorImageView.topAnchor.constraint(equalTo: errorContainer.topAnchor, constant: 16),
-        errorImageView.centerXAnchor.constraint(equalTo: errorContainer.centerXAnchor),
-        errorImageView.heightAnchor.constraint(equalToConstant: 80),
-        
-        
-        errorLabel.topAnchor.constraint(equalTo: errorImageView.bottomAnchor, constant: 8),
-        errorLabel.leadingAnchor.constraint(equalTo: errorContainer.leadingAnchor, constant: 8),
-        errorLabel.trailingAnchor.constraint(equalTo: errorContainer.trailingAnchor, constant: -8),
-        errorLabel.bottomAnchor.constraint(equalTo: errorContainer.bottomAnchor, constant: -16)
-    ])
-    
-    
-    errorContainer.backgroundColor = UIColor.black.withAlphaComponent(0.7)
-    errorContainer.layer.cornerRadius = 12
-    errorContainer.clipsToBounds = true
-    
-    
-    errorContainer.alpha = 0
-    UIView.animate(withDuration: 0.3) {
-        errorContainer.alpha = 1
     }
     
+    @objc func refreshButtonDidTap() {
+        didTapRefreshButton?()
     }
-
+}
