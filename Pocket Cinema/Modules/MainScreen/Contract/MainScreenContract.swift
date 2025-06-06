@@ -18,6 +18,7 @@ protocol MainScreenPresenterProtocol: AnyObject {
 
 protocol MainScreenViewControllerProtocol: AnyObject {
     func configure(viewModel: MainScreenViewModel)
+    
 }
 
 

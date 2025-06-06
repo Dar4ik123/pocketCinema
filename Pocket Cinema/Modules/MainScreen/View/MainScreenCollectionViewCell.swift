@@ -18,6 +18,8 @@ final class MainScreenCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupCell()
+        
+        
     }
     
     required init?(coder: NSCoder) {
@@ -31,12 +33,12 @@ final class MainScreenCollectionViewCell: UICollectionViewCell {
         yearLabel.text = nil
     }
     
-    func configure(with configuration: MainScreenViewModel.MainScreenCellConfiguration) {
+    func configure(configuration: MainScreenViewModel.MainScreenCellConfiguration) {
         titleLabel.text = configuration.title
         yearLabel.text = configuration.year
-        imageView.image = configuration.poster
+        guard let posterURL = URL(string: configuration.poster ?? "") else { return }
+        imageView.loadImage(from: posterURL)
     }
-    
     private func setupCell() {
         contentView.backgroundColor = .lightGray.withAlphaComponent(0.3)
         contentView.layer.cornerRadius = 8
@@ -78,4 +80,6 @@ final class MainScreenCollectionViewCell: UICollectionViewCell {
             make.bottom.equalToSuperview()
         }
     }
+    
+   
 }

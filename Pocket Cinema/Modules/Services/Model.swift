@@ -5,9 +5,9 @@
 //  Created by Айдар on 12.05.2025.
 //
 
-import Foundation
+import UIKit
 
-struct MovieResponse: Codable {
+struct MovieResponse: Decodable {
     let search: [Movie]
     let totalResults, response: String
 
@@ -19,10 +19,10 @@ struct MovieResponse: Codable {
 }
 
 // MARK: - Search
-struct Movie: Codable {
+struct Movie: Decodable {
     let title, year, imdbID: String
     let type: TypeEnum
-    let poster: String
+    let poster: String?
 
     enum CodingKeys: String, CodingKey {
         case title = "Title"
@@ -33,6 +33,6 @@ struct Movie: Codable {
     }
 }
 
-enum TypeEnum: String, Codable {
+enum TypeEnum: String, Decodable {
     case movie = "movie"
 }

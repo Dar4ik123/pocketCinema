@@ -14,5 +14,4 @@ enum NetworkError: Error {
     case invalidResponse
     case parsingError
     case requestError(Error)
-    
 }

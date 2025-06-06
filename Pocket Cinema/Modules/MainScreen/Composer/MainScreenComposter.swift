@@ -14,7 +14,6 @@ final class MainScreenComposter: MainScreenComposterProtocol {
         let model = MainScreenFlowModel()
         let presenter = MainScreenPresenter(networkManager: networkManager, model: model)
         let viewController = MainScreenViewController(presenter: presenter)
-        
         presenter.view = viewController
         
         return viewController

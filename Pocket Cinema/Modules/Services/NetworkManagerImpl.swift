@@ -9,30 +9,32 @@ import UIKit
 
 protocol NetworkManager {
     func fetch(_ target: ApiTarget, completion: @escaping(Result<MovieResponse, NetworkError>) -> Void)
-    func loadImage(url: String) -> UIImage
+    func loadImage(url: String, completion: @escaping (UIImage?) -> Void)
 }
-
 final class NetworkManagerImpl: NetworkManager {
     
     func fetch(_ target: ApiTarget, completion: @escaping(Result<MovieResponse, NetworkError>) -> Void) {
         request(target, completion: completion)
     }
     
-    // реализовать func loadImage на вход принимает url в виде String возырвщает uiimage
-    func loadImage(url: String) -> UIImage {
-        guard let imageUrl = URL(string: url),
-              let imageData = try? Data(contentsOf: imageUrl),
-              let image = UIImage(data: imageData) else {
-    
-            return UIImage()
+    func loadImage(url: String, completion: @escaping (UIImage?) -> Void) {
+        guard let imageUrl = URL(string: url) else {
+            completion(nil)
+            return
         }
-        return image
+        URLSession.shared.dataTask(with: imageUrl) { data, _, error in
+            guard let data = data, error == nil, let image = UIImage(data: data) else {
+                completion(nil)
+                return
+            }
+            DispatchQueue.main.async {
+                completion(image)
+            }
+        }.resume()
     }
-        
     
-    
-    private func request<T: Codable>(_ target: ApiTarget, completion: @escaping(Result<T, NetworkError>) -> Void) {
-                guard let url = URL(string: target.baseUrl + target.path) else {
+    private func request<T: Decodable>(_ target: ApiTarget, completion: @escaping(Result<T, NetworkError>) -> Void) {
+        guard let url = URL(string: target.baseUrl + target.path) else {
             completion(.failure(.invalidURL))
             return
         }
@@ -57,7 +59,7 @@ final class NetworkManagerImpl: NetworkManager {
             }
         }.resume()
     }
-    
 }
+
 
 
